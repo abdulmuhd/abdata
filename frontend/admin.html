@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Zaply Admin — Console</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23101828'/%3E%3Cpath d='M36 10 18 37h12l-4 17 20-27H33l3-17z' fill='%230AA65A'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body>
+  <!-- login -->
+  <div id="login-view" class="login-wrap" hidden>
+    <form id="login-form" class="login-card">
+      <div class="login-logo">Z<span>·</span>Admin</div>
+      <h1>Zaply Console</h1>
+      <p class="login-sub">Sign in with an administrator account.</p>
+      <label>Email<br /><input name="email" type="email" required autocomplete="username" placeholder="admin@zaply.ng" /></label>
+      <label>Password<br /><input name="password" type="password" required autocomplete="current-password" placeholder="••••••••" /></label>
+      <button class="btn-primary" type="submit" id="login-btn">Sign In</button>
+      <p class="login-err" id="login-err" hidden></p>
+    </form>
+  </div>
+
+  <!-- shell -->
+  <div id="shell" class="shell" hidden>
+    <aside class="sidebar">
+      <div class="side-logo">Z<span>·</span>Admin</div>
+      <nav id="side-nav">
+        <button data-tab="overview" class="is-active">Overview</button>
+        <button data-tab="users">Users</button>
+        <button data-tab="transactions">Transactions</button>
+        <button data-tab="plans">Data Plans</button>
+        <button data-tab="cables">Cable Plans</button>
+        <button data-tab="broadcast">Notifications</button>
+        <button data-tab="webhook">Webhook</button>
+        <button data-tab="api-manager">API Manager</button>
+        <button data-tab="system-users">System Users</button>
+        <button data-tab="site-settings">Site Settings</button>
+        <button data-tab="promos">Promos</button>
+      </nav>
+      <div class="side-foot">
+        <span id="whoami"></span>
+        <button id="logout-btn" class="btn-ghost btn-sm">Sign out</button>
+      </div>
+    </aside>
+
+    <main class="content">
+      <!-- OVERVIEW -->
+      <section data-panel="overview">
+        <header class="page-head"><h2>Overview</h2><span class="muted" id="ov-updated"></span></header>
+        <div class="stat-grid" id="stat-cards"></div>
+
+        <div class="card">
+          <h3>Profit & Loss <span class="muted" id="pnl-period"></span></h3>
+          <div id="pnl-summary" class="mix"></div>
+          <div id="pnl-by-service" class="mix" style="margin-top:12px;"></div>
+        </div>
+
+        <div class="card" id="provider-balances-card" style="display:none;">
+          <h3>API Provider Balances</h3>
+          <div id="provider-balances" class="mix"></div>
+        </div>
+
+        <div class="panel-grid">
+          <div class="card card-wide">
+            <h3>Successful volume · last 14 days</h3>
+            <div id="chart-area"></div>
+          </div>
+          <div class="card">
+            <h3>Revenue by service</h3>
+            <div id="service-mix" class="mix"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Status breakdown</h3>
+          <div id="status-mix" class="mix"></div>
+        </div>
+
+        <div class="card">
+          <h3>Newest accounts</h3>
+          <table class="tbl" id="signup-tbl"><thead><tr><th>#</th><th>Name</th><th>Email</th><th>Joined</th></tr></thead><tbody></tbody></table>
+        </div>
+      </section>
+
+      <!-- USERS -->
+      <section data-panel="users" hidden>
+        <header class="page-head"><h2>Users</h2></header>
+        <div class="toolbar">
+          <input id="user-q" type="search" placeholder="Search name, email or phone…" />
+          <button class="btn-primary btn-sm" id="user-search">Search</button>
+          <div class="export-group" style="margin-left:auto;display:flex;gap:4px;">
+            <button class="btn-ghost btn-sm" data-export="users" data-fmt="csv">CSV</button>
+            <button class="btn-ghost btn-sm" data-export="users" data-fmt="xlsx">Excel</button>
+            <button class="btn-ghost btn-sm" data-export="users" data-fmt="json">JSON</button>
+          </div>
+        </div>
+        <div class="card">
+          <table class="tbl" id="users-tbl">
+            <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th><th>Balance</th><th>Txns</th><th>Status</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <div class="pager"><button class="btn-ghost btn-sm" id="users-prev">‹ Prev</button><span id="users-page"></span><button class="btn-ghost btn-sm" id="users-next">Next ›</button></div>
+        </div>
+      </section>
+
+      <!-- TRANSACTIONS -->
+      <section data-panel="transactions" hidden>
+        <header class="page-head"><h2>All transactions</h2></header>
+        <div class="toolbar">
+          <input id="txn-q" type="search" placeholder="Reference, customer ref or email…" />
+          <select id="txn-status"><option value="">Any status</option><option value="successful">Successful</option><option value="pending">Pending</option><option value="failed">Failed</option></select>
+          <select id="txn-service"><option value="">Any service</option><option value="airtime">Airtime</option><option value="data">Data</option><option value="electricity">Electricity</option><option value="cable">Cable</option><option value="exam_pins">Exam PINs</option><option value="education">Education</option></select>
+          <button class="btn-primary btn-sm" id="txn-search">Filter</button>
+          <div class="export-group" style="margin-left:auto;display:flex;gap:4px;">
+            <button class="btn-ghost btn-sm" data-export="txns" data-fmt="csv">CSV</button>
+            <button class="btn-ghost btn-sm" data-export="txns" data-fmt="xlsx">Excel</button>
+            <button class="btn-ghost btn-sm" data-export="txns" data-fmt="json">JSON</button>
+          </div>
+        </div>
+        <div class="card">
+          <table class="tbl" id="txns-tbl">
+            <thead><tr><th>Reference</th><th>User</th><th>Service</th><th>Detail</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+            <tbody></tbody>
+          </table>
+          <div class="pager"><button class="btn-ghost btn-sm" id="txns-prev">‹ Prev</button><span id="txns-page"></span><button class="btn-ghost btn-sm" id="txns-next">Next ›</button></div>
+        </div>
+      </section>
+
+      <!-- DATA PLANS -->
+      <section data-panel="plans" hidden>
+        <header class="page-head"><h2>Data plan pricing</h2></header>
+        <div class="toolbar">
+          <input type="search" id="plan-search" placeholder="Search plans..." />
+          <select id="plan-net"><option value="">All networks</option><option value="mtn">MTN</option><option value="airtel">Airtel</option><option value="glo">Glo</option><option value="9mobile">9mobile</option></select>
+          <select id="plan-cat"><option value="">All categories</option></select>
+          <button class="btn-primary btn-sm" id="data-create-btn">+ New Plan</button>
+        </div>
+        <div class="card">
+          <table class="tbl" id="plans-tbl">
+            <thead><tr><th>Network</th><th>Plan</th><th>Validity</th><th>Buying (₦)</th><th>Selling (₦)</th><th>Promo (₦)</th><th>Active</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="card">
+          <h3>Disable category</h3>
+          <p class="muted" style="margin-bottom:8px;">Hide a category for a network from users.</p>
+          <div style="display:flex;gap:8px;align-items:end;flex-wrap:wrap;">
+            <label style="margin:0;">Network<br />
+              <select id="dc-net"><option value="mtn">MTN</option><option value="airtel">Airtel</option><option value="glo">Glo</option><option value="9mobile">9mobile</option></select>
+            </label>
+            <label style="margin:0;">Category<br />
+              <select id="dc-cat"><option value="">Select…</option></select>
+            </label>
+            <button class="btn-primary btn-sm" id="dc-toggle-btn">Disable</button>
+          </div>
+          <div id="dc-list" style="margin-top:10px;"></div>
+        </div>
+      </section>
+
+      <!-- CABLE PLANS -->
+      <section data-panel="cables" hidden>
+        <header class="page-head"><h2>Cable TV packages</h2></header>
+        <div class="toolbar">
+          <select id="cab-provider"><option value="">All providers</option><option value="gotv">GOtv</option><option value="dstv">DStv</option><option value="startimes">Startimes</option></select>
+          <button class="btn-primary btn-sm" id="cab-sync-btn">Sync from Provider</button>
+          <span class="muted" id="cab-sync-msg"></span>
+          <span class="muted">Edit selling price then press Save.</span>
+        </div>
+        <div class="card">
+          <table class="tbl" id="cables-tbl">
+            <thead><tr><th>Provider</th><th>Package</th><th>Buying (₦)</th><th>Selling (₦)</th><th>Active</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- BROADCAST -->
+      <section data-panel="broadcast" hidden>
+        <header class="page-head"><h2>Broadcast notification</h2></header>
+        <div class="card narrow">
+          <form id="bc-form">
+            <label>Recipient<br />
+              <select id="bc-recipient">
+                <option value="">All active users</option>
+                <option value="specific">Specific user (by email)</option>
+              </select>
+            </label>
+            <label id="bc-email-wrap" style="display:none">Email address<br /><input id="bc-email" type="email" placeholder="user@example.com" /></label>
+            <label>Title<br /><input id="bc-title" required maxlength="120" placeholder="e.g. Scheduled maintenance" /></label>
+            <label>Message<br /><textarea id="bc-body" rows="5" required maxlength="500" placeholder="Write the announcement…"></textarea></label>
+            <button class="btn-primary" type="submit">Send notification</button>
+            <p class="muted" style="margin-top:8px">Delivered to the selected user(s) notification feed instantly.</p>
+          </form>
+        </div>
+      </section>
+
+      <!-- WEBHOOK -->
+      <section data-panel="webhook" hidden>
+        <header class="page-head"><h2>Outbound webhook</h2></header>
+        <div class="card narrow">
+          <p class="muted">Transaction events (<code>transaction.successful</code>, <code>transaction.failed</code>) will be POSTed to this URL as JSON.</p>
+          <form id="wh-form">
+            <label>Endpoint URL<br /><input id="wh-url" type="url" placeholder="https://example.com/hooks/zaply" /></label>
+            <div class="row-btns">
+              <button class="btn-primary" type="submit">Save URL</button>
+              <button class="btn-ghost" type="button" id="wh-test">Send test event</button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- API MANAGER -->
+      <section data-panel="api-manager" hidden>
+        <header class="page-head">
+          <h2>API Manager</h2>
+          <button class="btn-primary btn-sm" id="am-add-provider">+ Add Provider</button>
+        </header>
+
+        <!-- Providers List View -->
+        <div id="am-providers-view">
+          <div class="toolbar">
+            <input id="am-search" type="search" placeholder="Search providers…" />
+            <button class="btn-primary btn-sm" id="am-search-btn">Search</button>
+          </div>
+          <div class="card">
+            <table class="tbl" id="am-providers-tbl">
+              <thead><tr><th>Provider</th><th>Balance</th><th>Status</th><th>Services</th><th>Actions</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+
+          <!-- Service Provider Routing -->
+          <div class="card" style="margin-top: 16px;">
+            <h3>Service Provider Routing</h3>
+            <p class="muted" style="margin-bottom: 12px;">Select which provider handles each service type.</p>
+            <div id="am-routing-form"></div>
+            <button class="btn-primary btn-sm" id="am-save-routing" style="margin-top: 12px;">Save Routing</button>
+          </div>
+
+          <!-- API Logs -->
+          <div class="card" style="margin-top: 16px;">
+            <h3>API Logs</h3>
+            <div class="toolbar">
+              <select id="am-log-filter">
+                <option value="">All</option>
+                <option value="true">Successful</option>
+                <option value="false">Failed</option>
+              </select>
+              <button class="btn-ghost btn-sm" id="am-refresh-logs">Refresh</button>
+            </div>
+            <table class="tbl" id="am-logs-tbl">
+              <thead><tr><th>Provider</th><th>Operation</th><th>Status</th><th>HTTP</th><th>Duration</th><th>Date</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <div class="pager"><button class="btn-ghost btn-sm" id="am-logs-prev">‹ Prev</button><span id="am-logs-page"></span><button class="btn-ghost btn-sm" id="am-logs-next">Next ›</button></div>
+          </div>
+        </div>
+
+        <!-- Add/Edit Provider View -->
+        <div id="am-provider-form-view" style="display:none">
+          <div class="card narrow">
+            <h3 id="am-form-title">Add API Provider</h3>
+            <form id="am-provider-form">
+              <input type="hidden" id="am-provider-id" />
+              <label>Provider Name<br /><input id="am-p-name" required maxlength="100" placeholder="e.g. GongozConcept" /></label>
+              <label>Provider Code<br /><input id="am-p-code" required maxlength="50" placeholder="e.g. gongoz" /></label>
+              <label>Description<br /><input id="am-p-desc" maxlength="500" placeholder="Optional description" /></label>
+              <label style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+                <input type="checkbox" id="am-p-balance" style="width:auto;" /> Supports Balance Check
+              </label>
+
+              <h4 style="margin-top:18px;margin-bottom:10px;">API Configuration</h4>
+              <label>Base URL<br /><input id="am-p-url" required maxlength="500" placeholder="https://api.example.com" /></label>
+               <label>API Key<br /><input id="am-p-token" type="password" maxlength="500" placeholder="Just the token, no prefix" /></label>
+
+              <h4 style="margin-top:18px;margin-bottom:10px;">Service Endpoints</h4>
+              <p class="muted" style="margin-bottom:12px;">Enter the URL path for each service. Leave blank to skip.</p>
+
+              <label style="margin-bottom:12px;display:block;">Balance Check URL<br />
+                <div class="endpoint-add-row">
+                  <select data-svc-method="check_balance" style="width:70px;flex-shrink:0;">
+                    <option value="GET" selected>GET</option>
+                    <option value="POST">POST</option>
+                  </select>
+                  <input data-svc-url="check_balance" placeholder="/api/user/" style="flex:1;" />
+                </div>
+              </label>
+
+              <div id="am-service-urls">
+                <label>Airtime URL<br />
+                  <div class="endpoint-add-row">
+                    <select data-svc-method="airtime" style="width:70px;flex-shrink:0;"><option value="POST" selected>POST</option><option value="GET">GET</option><option value="PUT">PUT</option></select>
+                    <input data-svc-url="airtime" placeholder="/api/airtime" style="flex:1;" />
+                  </div>
+                </label>
+                <label>Data URL<br />
+                  <div class="endpoint-add-row">
+                    <select data-svc-method="data" style="width:70px;flex-shrink:0;"><option value="POST" selected>POST</option><option value="GET">GET</option><option value="PUT">PUT</option></select>
+                    <input data-svc-url="data" placeholder="/api/data" style="flex:1;" />
+                  </div>
+                </label>
+                <label>Cable TV URL<br />
+                  <div class="endpoint-add-row">
+                    <select data-svc-method="cable" style="width:70px;flex-shrink:0;"><option value="POST" selected>POST</option><option value="GET">GET</option><option value="PUT">PUT</option></select>
+                    <input data-svc-url="cable" placeholder="/api/cable" style="flex:1;" />
+                  </div>
+                </label>
+                <label>Electricity URL<br />
+                  <div class="endpoint-add-row">
+                    <select data-svc-method="electricity" style="width:70px;flex-shrink:0;"><option value="POST" selected>POST</option><option value="GET">GET</option><option value="PUT">PUT</option></select>
+                    <input data-svc-url="electricity" placeholder="/api/electricity" style="flex:1;" />
+                  </div>
+                </label>
+                <label>ePIN URL<br />
+                  <div class="endpoint-add-row">
+                    <select data-svc-method="epin" style="width:70px;flex-shrink:0;"><option value="POST" selected>POST</option><option value="GET">GET</option><option value="PUT">PUT</option></select>
+                    <input data-svc-url="epin" placeholder="/api/epin" style="flex:1;" />
+                  </div>
+                </label>
+                <label>Bulk SMS URL<br />
+                  <div class="endpoint-add-row">
+                    <select data-svc-method="bulk_sms" style="width:70px;flex-shrink:0;"><option value="POST" selected>POST</option><option value="GET">GET</option><option value="PUT">PUT</option></select>
+                    <input data-svc-url="bulk_sms" placeholder="/api/bulk-sms" style="flex:1;" />
+                  </div>
+                </label>
+                <label>Exam PINs URL<br />
+                  <div class="endpoint-add-row">
+                    <select data-svc-method="exam_pins" style="width:70px;flex-shrink:0;"><option value="POST" selected>POST</option><option value="GET">GET</option><option value="PUT">PUT</option></select>
+                    <input data-svc-url="exam_pins" placeholder="/api/exam-pins" style="flex:1;" />
+                  </div>
+                </label>
+                <label>Education URL<br />
+                  <div class="endpoint-add-row">
+                    <select data-svc-method="education" style="width:70px;flex-shrink:0;"><option value="POST" selected>POST</option><option value="GET">GET</option><option value="PUT">PUT</option></select>
+                    <input data-svc-url="education" placeholder="/api/education" style="flex:1;" />
+                  </div>
+                </label>
+              </div>
+
+              <div class="row-btns" style="margin-top:20px;">
+                <button class="btn-primary" type="submit" id="am-save-btn">Save Provider</button>
+                <button class="btn-ghost" type="button" id="am-cancel-btn">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Provider Detail View -->
+        <div id="am-provider-detail-view" style="display:none">
+          <div class="card">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <h3 id="am-detail-name">Provider Details</h3>
+              <div style="display:flex;gap:8px;">
+                <button class="btn-ghost btn-sm" id="am-detail-edit">Edit</button>
+                <button class="btn-ghost btn-sm" id="am-detail-test" style="color:var(--info);">Test Connection</button>
+                <button class="btn-ghost btn-sm" id="am-detail-balance">Check Balance</button>
+                <button class="btn-ghost btn-sm" id="am-detail-delete" style="color:var(--danger);">Delete</button>
+                <button class="btn-ghost btn-sm" id="am-detail-back">← Back</button>
+              </div>
+            </div>
+            <div id="am-detail-info" style="margin-top:12px;"></div>
+            <div id="am-detail-credentials" style="margin-top:16px;"></div>
+            <div id="am-detail-endpoints" style="margin-top:16px;"></div>
+            <div id="am-detail-test-result" style="margin-top:12px;display:none"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SYSTEM USERS -->
+      <section data-panel="system-users" hidden>
+        <header class="page-head">
+          <h2>System Users</h2>
+          <button class="btn-primary btn-sm" id="su-add-user">+ Add System User</button>
+        </header>
+
+        <!-- Users List View -->
+        <div id="su-list-view">
+          <div class="toolbar">
+            <input id="su-search" type="search" placeholder="Search name, email or username…" />
+            <select id="su-status-filter">
+              <option value="">All Status</option>
+              <option value="active">Active</option>
+              <option value="suspended">Suspended</option>
+            </select>
+            <button class="btn-primary btn-sm" id="su-search-btn">Search</button>
+          </div>
+          <div class="card">
+            <table class="tbl" id="su-users-tbl">
+              <thead><tr><th>Name</th><th>Email</th><th>Username</th><th>Role</th><th>Status</th><th>Last Login</th><th>Actions</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <div class="pager"><button class="btn-ghost btn-sm" id="su-prev">‹ Prev</button><span id="su-page"></span><button class="btn-ghost btn-sm" id="su-next">Next ›</button></div>
+          </div>
+
+          <!-- Activity Log -->
+          <div class="card" style="margin-top: 16px;">
+            <h3>Activity Log</h3>
+            <table class="tbl" id="su-activity-tbl">
+              <thead><tr><th>User</th><th>Action</th><th>Details</th><th>Date</th></tr></thead>
+              <tbody></tbody>
+            </table>
+            <div class="pager"><button class="btn-ghost btn-sm" id="su-act-prev">‹ Prev</button><span id="su-act-page"></span><button class="btn-ghost btn-sm" id="su-act-next">Next ›</button></div>
+          </div>
+        </div>
+
+        <!-- Add/Edit User Form -->
+        <div id="su-form-view" style="display:none">
+          <div class="card narrow">
+            <h3 id="su-form-title">Promote User to System User</h3>
+            <form id="su-user-form">
+              <input type="hidden" id="su-user-id" />
+              <input type="hidden" id="su-selected-user-id" />
+              <label>Search user by email or name<br />
+                <input id="su-user-search" type="text" placeholder="Type to search…" autocomplete="off" />
+              </label>
+              <div id="su-user-results" style="display:none;border:1px solid var(--line);border-radius:8px;max-height:160px;overflow-y:auto;margin-bottom:12px;"></div>
+              <div id="su-selected-user" style="display:none;padding:10px;background:var(--brand-050);border-radius:8px;margin-bottom:12px;"></div>
+              <label>Role<br />
+                <select id="su-role">
+                  <option value="super_admin">Super Admin</option>
+                  <option value="admin">Admin</option>
+                  <option value="moderator" selected>Moderator</option>
+                </select>
+              </label>
+              <div class="row-btns" style="margin-top:16px;">
+                <button class="btn-primary" type="submit" id="su-save-btn" disabled>Promote User</button>
+                <button class="btn-ghost" type="button" id="su-cancel-btn">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- SITE SETTINGS -->
+      <section data-panel="site-settings" hidden>
+        <header class="page-head"><h2>Site Settings</h2></header>
+
+        <div class="card narrow" style="margin-bottom:16px;">
+          <h3>General</h3>
+          <label>Site Name<br /><input id="ss-name" maxlength="60" placeholder="Zaply" /></label>
+          <div style="margin-top:12px;">
+            <button class="btn-primary btn-sm" id="ss-save-name">Save Name</button>
+          </div>
+        </div>
+
+        <div class="card narrow" style="margin-bottom:16px;">
+          <h3>Theme</h3>
+          <p class="muted" style="margin:0 0 14px;">Pick a colour theme for the entire user-facing app.</p>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <select id="ss-theme-select" style="flex:1;min-width:200px;padding:8px 12px;border:1px solid #d0d5dd;border-radius:8px;font-size:13px;"></select>
+            <div id="ss-theme-preview" style="width:48px;height:48px;border-radius:12px;border:1px solid #eaecf0;flex-shrink:0;"></div>
+          </div>
+          <div style="margin-top:16px;">
+            <button class="btn-primary btn-sm" id="ss-save-theme">Save Theme</button>
+          </div>
+        </div>
+
+        <div class="card narrow">
+          <h3>Support Contact</h3>
+          <p class="muted" style="margin:0 0 14px;">Shown to users for help and complaints.</p>
+          <label>Support Phone<br /><input id="ss-support-phone" type="tel" placeholder="0801 234 5678" /></label>
+          <label style="margin-top:12px;">Support Email<br /><input id="ss-support-email" type="email" placeholder="support@zaply.ng" /></label>
+          <div style="margin-top:12px;">
+            <button class="btn-primary btn-sm" id="ss-save-contact">Save Contact</button>
+          </div>
+        </div>
+      </section>
+
+      <section data-panel="promos" hidden>
+        <header class="page-head"><h2>Promo Codes</h2></header>
+        <div class="card narrow" style="margin-bottom:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+            <span style="font-weight:600;">Manage promo codes</span>
+            <button class="btn-primary btn-sm" id="promo-create-btn">+ New promo</button>
+          </div>
+          <div id="promo-table"></div>
+        </div>
+
+        <div id="promo-modal" class="modal-wrap" hidden>
+          <div class="modal">
+            <h3 id="promo-m-title">Create promo</h3>
+            <label>Code<br /><input id="promo-m-code" maxlength="20" placeholder="e.g. SAVE10" style="text-transform:uppercase" /></label>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+              <label>Discount %<br /><input id="promo-m-pct" type="number" min="0" max="100" placeholder="0" /></label>
+              <label>Discount ₦<br /><input id="promo-m-amt" type="number" min="0" placeholder="0" /></label>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+              <label>Max uses (0 = unlimited)<br /><input id="promo-m-max" type="number" min="0" placeholder="0" /></label>
+              <label>Min amount ₦<br /><input id="promo-m-min" type="number" min="0" placeholder="0" /></label>
+            </div>
+            <label style="margin-top:12px;">Expires at<br /><input id="promo-m-exp" type="datetime-local" /></label>
+            <p class="login-err" id="promo-m-err" hidden></p>
+            <div class="row-btns">
+              <button class="btn-primary" id="promo-m-save">Save</button>
+              <button class="btn-ghost" id="promo-m-cancel">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- data plan modal -->
+  <div id="plan-modal" class="modal-wrap" hidden>
+    <div class="modal" style="max-width:520px;">
+      <h3 id="plan-m-title">Create Data Plan</h3>
+      <input type="hidden" id="plan-m-edit-code" />
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <label>Network<br />
+          <select id="plan-m-net">
+            <option value="mtn">MTN</option>
+            <option value="airtel">Airtel</option>
+            <option value="glo">Glo</option>
+            <option value="9mobile">9mobile</option>
+          </select>
+        </label>
+        <label>Category<br />
+          <input id="plan-m-cat" maxlength="40" placeholder="e.g. Monthly" />
+        </label>
+      </div>
+      <label>Plan Name<br /><input id="plan-m-name" required maxlength="120" placeholder="e.g. 1GB Data Bundle" /></label>
+      <label>Plan Code (unique)<br /><input id="plan-m-code" required maxlength="60" placeholder="e.g. mtn-1gb-30d" /></label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <label>Volume (MB)<br /><input id="plan-m-vol" type="number" min="1" required placeholder="e.g. 1024" /></label>
+        <label>Validity (days)<br /><input id="plan-m-validity" type="number" min="1" value="30" required /></label>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <label>Buying Price (₦)<br /><input id="plan-m-buy" type="number" min="0" placeholder="0" /></label>
+        <label>Selling Price (₦)<br /><input id="plan-m-sell" type="number" min="0" required placeholder="0" /></label>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+        <label>Promo Price (₦) — leave empty for no promo<br /><input id="plan-m-promo" type="number" min="0" placeholder="Leave empty to disable" /></label>
+      </div>
+      <label style="margin-top:8px;display:flex;align-items:center;gap:8px;">
+        <input type="checkbox" id="plan-m-active" checked style="width:auto;" /> Active (visible to users)
+      </label>
+      <p class="login-err" id="plan-m-err" hidden></p>
+      <div class="row-btns" style="margin-top:16px;">
+        <button class="btn-primary" id="plan-m-save">Save Plan</button>
+        <button class="btn-ghost" id="plan-m-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- fund wallet modal -->
+  <div id="fund-modal" class="modal-wrap" hidden>
+    <div class="modal">
+      <h3 id="fund-title">Fund wallet</h3>
+      <p class="muted" id="fund-user"></p>
+      <label>Amount (₦)<br /><input id="fund-amt" type="number" min="50" step="1" placeholder="e.g. 5000" /></label>
+      <label>Note (optional)<br /><input id="fund-note" maxlength="140" placeholder="Reason / memo" /></label>
+      <p class="login-err" id="fund-err" hidden></p>
+      <div class="row-btns">
+        <button class="btn-primary" id="fund-go">Credit wallet</button>
+        <button class="btn-ghost" id="fund-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- user profile modal -->
+  <div id="profile-modal" class="modal-wrap" hidden>
+    <div class="modal" style="max-width:520px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <h3 id="pm-title">User Profile</h3>
+        <button class="btn-ghost btn-sm" id="pm-close">&times;</button>
+      </div>
+      <div id="pm-info" class="card" style="margin-bottom:16px;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <button class="btn-primary btn-sm" id="pm-edit-name">Edit Name</button>
+        <button class="btn-primary btn-sm" id="pm-change-pw">Change Password</button>
+        <button class="btn-primary btn-sm" id="pm-change-pin">Change PIN</button>
+        <button class="btn-primary btn-sm" id="pm-credit">Credit Wallet</button>
+        <button class="btn-primary btn-sm" id="pm-debit" style="color:var(--danger);">Debit Wallet</button>
+        <button class="btn-primary btn-sm" id="pm-toggle-status" style="color:var(--danger);">Block</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- edit name modal -->
+  <div id="edit-name-modal" class="modal-wrap" hidden>
+    <div class="modal">
+      <h3>Edit Name</h3>
+      <label>Full Name<br /><input id="en-name" maxlength="120" placeholder="Full name" /></label>
+      <p class="login-err" id="en-err" hidden></p>
+      <div class="row-btns">
+        <button class="btn-primary" id="en-save">Save</button>
+        <button class="btn-ghost" id="en-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- admin change password modal -->
+  <div id="admin-pw-modal" class="modal-wrap" hidden>
+    <div class="modal">
+      <h3>Change Password</h3>
+      <p class="muted" id="admin-pw-user"></p>
+      <label>New Password<br /><input id="admin-pw-input" type="password" minlength="6" placeholder="At least 6 characters" /></label>
+      <p class="login-err" id="admin-pw-err" hidden></p>
+      <div class="row-btns">
+        <button class="btn-primary" id="admin-pw-save">Reset Password</button>
+        <button class="btn-ghost" id="admin-pw-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- admin change PIN modal -->
+  <div id="admin-pin-modal" class="modal-wrap" hidden>
+    <div class="modal">
+      <h3>Change PIN</h3>
+      <p class="muted" id="admin-pin-user"></p>
+      <label>New PIN (4 digits)<br /><input id="admin-pin-input" type="password" pattern="\d{4}" maxlength="4" placeholder="1234" /></label>
+      <p class="login-err" id="admin-pin-err" hidden></p>
+      <div class="row-btns">
+        <button class="btn-primary" id="admin-pin-save">Reset PIN</button>
+        <button class="btn-ghost" id="admin-pin-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- debit wallet modal -->
+  <div id="debit-modal" class="modal-wrap" hidden>
+    <div class="modal">
+      <h3>Debit Wallet</h3>
+      <p class="muted" id="debit-user"></p>
+      <label>Amount (₦)<br /><input id="debit-amt" type="number" min="50" step="1" placeholder="e.g. 2000" /></label>
+      <label>Note (optional)<br /><input id="debit-note" maxlength="140" placeholder="Reason / memo" /></label>
+      <p class="login-err" id="debit-err" hidden></p>
+      <div class="row-btns">
+        <button class="btn-primary" id="debit-go" style="color:var(--danger);">Debit Wallet</button>
+        <button class="btn-ghost" id="debit-cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-root"></div>
+  <script type="module" src="/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Secure Checkout — Zaply</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="checkout-body" style="background:linear-gradient(160deg,#0b1f16,#123526 55%,#0b1f16);min-height:100dvh;padding:20px;overflow-x:hidden">
+  <div class="checkout-card">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span style="display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#0e9f5d">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4.5" y="10.5" width="15" height="9.5" rx="2"/><path d="M8 10V7.6a4 4 0 0 1 8 0V10"/></svg>
+        SECURE CHECKOUT
+      </span>
+      <span id="gateway-name" style="font-size:12px;font-weight:700;color:var(--muted)">PayThru · Sandbox</span>
+    </div>
+
+    <div class="checkout-merchant" style="margin-top:18px">
+      <div class="logo-mark" style="width:34px;height:34px;border-radius:10px">
+        <svg width="19" height="19" viewBox="0 0 64 64"><path d="M36 10 18 37h12l-4 17 20-27H33l3-17z" fill="#fff"/></svg>
+      </div>
+      <div>
+        <div style="font-size:13px;font-weight:750">Zaply Wallet Funding</div>
+        <div style="font-size:11px;color:var(--muted)">Payment to zaply.ng</div>
+      </div>
+    </div>
+
+    <div class="checkout-amt num" id="amt">₦—</div>
+    <div class="checkout-ref num" id="ref">Ref: —</div>
+
+    <form id="pay-form">
+      <div class="field" style="margin-top:14px">
+        <label class="field__label">Card number</label>
+        <div class="field__wrap">
+          <input inputmode="numeric" placeholder="4084 0840 8408 4081" value="4084 0840 8408 4081" maxlength="19" />
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field">
+          <label class="field__label">Expiry</label>
+          <div class="field__wrap"><input placeholder="MM / YY" value="09 / 32" /></div>
+        </div>
+        <div class="field">
+          <label class="field__label">CVV</label>
+          <div class="field__wrap"><input placeholder="•••" value="408" maxlength="3" /></div>
+        </div>
+      </div>
+
+      <button class="btn btn--primary" id="pay-btn" type="submit" style="margin-top:6px">Pay</button>
+    </form>
+
+    <div class="checkout-note">🧪 Sandbox gateway — no real money moves. Card fields are pre-filled test values; in production this page is hosted by Paystack/Flutterwave.</div>
+
+    <div id="status" hidden style="text-align:center;padding:8px 0"></div>
+  </div>
+
+<script type="module">
+  const qs = new URLSearchParams(location.search);
+  const ref = qs.get("reference");
+  const amtKobo = Number(qs.get("amount") || 0);
+  const naira = (k) => "₦" + (k / 100).toLocaleString("en-NG", { minimumFractionDigits: 0 });
+
+  document.getElementById("amt").textContent = naira(amtKobo);
+  document.getElementById("ref").textContent = "Ref: " + ref;
+
+  const statusBox = document.getElementById("status");
+  const btn = document.getElementById("pay-btn");
+
+  document.getElementById("pay-form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    btn.disabled = true;
+    btn.textContent = "Processing payment…";
+
+    // Simulated gateway latency
+    await new Promise((r) => setTimeout(r, 1400));
+
+    try {
+      let session = null;
+      try { session = JSON.parse(localStorage.getItem("zaply.session.v1")); } catch {}
+      const res = await fetch(`/api/v1/wallet/fund/settle?reference=${encodeURIComponent(ref)}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(session?.access_token ? { Authorization: "Bearer " + session.access_token } : {}),
+        },
+      });
+      const payload = await res.json();
+      if (!res.ok) throw new Error(payload.message || "Payment failed");
+
+      statusBox.hidden = false;
+      statusBox.innerHTML = `
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#12b76a" stroke-width="1.7" stroke-linecap="round" style="margin:0 auto 10px"><path d="M21 11.5V12a9 9 0 1 1-5.3-8.2"/><path d="m9 11 3 3L22 4"/></svg>
+        <div style="font-size:16px;font-weight:800">Payment successful</div>
+        <div style="font-size:12.5px;color:var(--muted);margin-top:4px">${naira(amtKobo)} added to your wallet.</div>`;
+      statusBox.style.color = "var(--ink)";
+
+      setTimeout(() => { location.href = "/#/wallet"; }, 1500);
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = "Try again";
+      statusBox.hidden = false;
+      statusBox.innerHTML = `<div style="color:var(--danger);font-size:13px;font-weight:600">${err.message}</div>`;
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.venv/
+lib/
+lib64/
+include/
+bin/
+pyvenv.cfg
+
+# Environment files
+.env
+.env.*
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test / coverage
+.pytest_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# VAPID keys (secrets)
+vapid_private.pem
+vapid_public.pem
+
+# Docker
+docker-compose.override.yml

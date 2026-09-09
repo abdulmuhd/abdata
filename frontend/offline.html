@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>You're offline — Zaply</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230AA65A'/%3E%3Cpath d='M36 10 18 37h12l-4 17 20-27H33l3-17z' fill='%23fff'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <main style="min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px">
+    <div class="empty-state" style="text-align:center;max-width:340px">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#98a2b3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="margin:0 auto 14px">
+        <path d="M2.5 9.5a14.5 14.5 0 0 1 19 0"/><path d="M5.5 13a10 10 0 0 1 13 0"/>
+        <path d="M8.7 16.4a5.2 5.2 0 0 1 6.6 0"/><circle cx="12" cy="19.5" r="1" fill="#98a2b3" stroke="none"/>
+        <path d="m3 3 18 18" stroke="#f04438"/>
+      </svg>
+      <h4 style="font-size:17px;font-weight:800">You're offline</h4>
+      <p style="color:var(--muted);font-size:13px;margin-top:6px">
+        Check your internet connection and try again. Your money is safe — pending transactions complete automatically once you reconnect.
+      </p>
+      <button class="btn btn--primary" onclick="location.reload()" style="margin-top:18px;padding:13px 28px">Try again</button>
+    </div>
+  </main>
+</body>
+</html>
