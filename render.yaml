@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: zaply
+    runtime: image
+    image:
+      url: https://github.com/abdulmuhd/abdata
+    envVars:
+      - key: ENVIRONMENT
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: zaply-db
+          property: connectionString
+      - key: VTU_PROVIDER
+        value: mock
+      - key: PAYMENT_GATEWAY
+        value: mock
+      - key: SEED_DEMO_DATA
+        value: "false"
+      - key: WEB_CONCURRENCY
+        value: "1"
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+
+databases:
+  - name: zaply-db
+    plan: free
+    databaseName: zaply
+    user: zaply
