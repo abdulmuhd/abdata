@@ -18,7 +18,7 @@ uvicorn app.main:app --reload
 In development the app creates tables automatically and seeds networks, data plans,
 cable packages, discos and the demo user (`SEED_DEMO_DATA=true`).
 
-## Running tests
+## Ru nning tests
 
 ```bash
 python -m pytest
