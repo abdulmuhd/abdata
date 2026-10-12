@@ -11,7 +11,6 @@ from .core.database import Base, SessionLocal, engine
 from .core.errors import AppError
 from .routers import api_router, webhooks_router
 
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     if not settings.is_prod:
