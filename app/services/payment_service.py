@@ -49,7 +49,7 @@ def build_checkout(intent: PaymentIntent) -> dict:
             "public_key": _public_key(),
         }
     # Real gateways plug in here — e.g. paystack.transaction.initialize(...)
-    raise NotImplementedError("Configure PAYMENT_GATEWAY with an implemented adapter")
+    raise NotimplementedError("Configure PAYMENT_GATEWAY with an implemented adapter")
 
 
 def verify_webhook_signature(raw_body: bytes, signature: str | None) -> bool:

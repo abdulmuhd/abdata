@@ -108,7 +108,7 @@ def register(payload: RegisterIn, request: Request, db: Session = Depends(get_db
     user.verification_code_hash = hash_secret(code)
 
     notification_service.notify(
-        db, user.id, "Welcome to Zaply 🎉",
+        db, user.id, "Welcome to ElevenData 🎉",
         "Your account is ready. Buy airtime & data, pay bills and fund your wallet — all in one place.",
         type_="system",
     )

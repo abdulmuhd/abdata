@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=f"{settings.APP_NAME} API",
     description=(
-        "REST API powering the Zaply VTU platform — airtime, data, electricity and cable "
+        "REST API powering the ElevenData VTU platform — airtime, data, electricity and cable "
         "payments behind a secure wallet. JWT bearer auth: click **Authorize** and paste "
         "`access_token` from `/auth/login`."
     ),

@@ -1,4 +1,4 @@
-app = "zaply"
+app = ElevenData
 primary_region = "iad"
 
 [build]

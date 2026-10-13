@@ -1787,7 +1787,7 @@ class SiteSettingsIn(BaseModel):
 
 @router.get("/site-settings")
 def get_site_settings(db: Session = Depends(get_db), _: User = Depends(get_current_admin)):
-    name = _get_setting(db, SITE_NAME_KEY) or "Zaply"
+    name = _get_setting(db, SITE_NAME_KEY) or ElevenData
     theme_key = _get_setting(db, SITE_THEME_KEY) or "light"
     support_phone = _get_setting(db, SITE_SUPPORT_PHONE_KEY) or ""
     support_email = _get_setting(db, SITE_SUPPORT_EMAIL_KEY) or ""
@@ -1827,7 +1827,7 @@ def update_site_settings(payload: SiteSettingsIn, db: Session = Depends(get_db),
 
 @router.get("/site-settings/public")
 def get_public_site_settings(db: Session = Depends(get_db)):
-    name = _get_setting(db, SITE_NAME_KEY) or "Zaply"
+    name = _get_setting(db, SITE_NAME_KEY) or ElevenData
     theme_key = _get_setting(db, SITE_THEME_KEY) or "light"
     theme_vars = DEFAULT_THEMES.get(theme_key, DEFAULT_THEMES["light"])
     support_phone = _get_setting(db, SITE_SUPPORT_PHONE_KEY) or ""
@@ -1842,7 +1842,7 @@ def get_public_site_settings(db: Session = Depends(get_db)):
 @router.get("/manifest.json")
 def get_manifest(db: Session = Depends(get_db)):
     from fastapi.responses import JSONResponse
-    name = _get_setting(db, SITE_NAME_KEY) or "Zaply"
+    name = _get_setting(db, SITE_NAME_KEY) or ElevenData
     theme_key = _get_setting(db, SITE_THEME_KEY) or "light"
     theme_vars = DEFAULT_THEMES.get(theme_key, DEFAULT_THEMES["light"])
     return JSONResponse({

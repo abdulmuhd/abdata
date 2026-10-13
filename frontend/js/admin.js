@@ -1859,7 +1859,7 @@ let selectedTheme = "light";
 async function loadSiteSettings() {
   try {
     const d = await api("GET", "/admin/site-settings");
-    $("#ss-name").value = d.site_name || "Zaply";
+    $("#ss-name").value = d.site_name || ElevenData;
     $("#ss-support-phone").value = d.support_phone || "";
     $("#ss-support-email").value = d.support_email || "";
     selectedTheme = d.theme || "light";

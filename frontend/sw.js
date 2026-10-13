@@ -33,7 +33,7 @@ self.addEventListener("activate", (e) => {
 });
 
 self.addEventListener("push", (e) => {
-  let data = { title: "Zaply", body: "You have a new notification" };
+  let data = { title: ElevenData, body: "You have a new notification" };
   try {
     data = e.data.json();
   } catch {}

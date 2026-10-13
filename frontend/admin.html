@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Zaply Admin — Console</title>
+  <title>ElevenData Admin — Console</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23101828'/%3E%3Cpath d='M36 10 18 37h12l-4 17 20-27H33l3-17z' fill='%230AA65A'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="/css/admin.css" />
 </head>
@@ -12,9 +12,9 @@
   <div id="login-view" class="login-wrap" hidden>
     <form id="login-form" class="login-card">
       <div class="login-logo">Z<span>·</span>Admin</div>
-      <h1>Zaply Console</h1>
+      <h1>ElevenData Console</h1>
       <p class="login-sub">Sign in with an administrator account.</p>
-      <label>Email<br /><input name="email" type="email" required autocomplete="username" placeholder="admin@zaply.ng" /></label>
+      <label>Email<br /><input name="email" type="email" required autocomplete="username" placeholder="admin@ElevenData.ng" /></label>
       <label>Password<br /><input name="password" type="password" required autocomplete="current-password" placeholder="••••••••" /></label>
       <button class="btn-primary" type="submit" id="login-btn">Sign In</button>
       <p class="login-err" id="login-err" hidden></p>
@@ -201,7 +201,7 @@
         <div class="card narrow">
           <p class="muted">Transaction events (<code>transaction.successful</code>, <code>transaction.failed</code>) will be POSTed to this URL as JSON.</p>
           <form id="wh-form">
-            <label>Endpoint URL<br /><input id="wh-url" type="url" placeholder="https://example.com/hooks/zaply" /></label>
+            <label>Endpoint URL<br /><input id="wh-url" type="url" placeholder="https://example.com/hooks/ElevenData" /></label>
             <div class="row-btns">
               <button class="btn-primary" type="submit">Save URL</button>
               <button class="btn-ghost" type="button" id="wh-test">Send test event</button>
@@ -438,7 +438,7 @@
 
         <div class="card narrow" style="margin-bottom:16px;">
           <h3>General</h3>
-          <label>Site Name<br /><input id="ss-name" maxlength="60" placeholder="Zaply" /></label>
+          <label>Site Name<br /><input id="ss-name" maxlength="60" placeholder=ElevenData /></label>
           <div style="margin-top:12px;">
             <button class="btn-primary btn-sm" id="ss-save-name">Save Name</button>
           </div>
@@ -460,7 +460,7 @@
           <h3>Support Contact</h3>
           <p class="muted" style="margin:0 0 14px;">Shown to users for help and complaints.</p>
           <label>Support Phone<br /><input id="ss-support-phone" type="tel" placeholder="0801 234 5678" /></label>
-          <label style="margin-top:12px;">Support Email<br /><input id="ss-support-email" type="email" placeholder="support@zaply.ng" /></label>
+          <label style="margin-top:12px;">Support Email<br /><input id="ss-support-email" type="email" placeholder="support@ElevenData.ng" /></label>
           <div style="margin-top:12px;">
             <button class="btn-primary btn-sm" id="ss-save-contact">Save Contact</button>
           </div>

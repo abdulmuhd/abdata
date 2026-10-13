@@ -1,6 +1,6 @@
 {
   "name": "Zaply — Airtime, Data & Bills",
-  "short_name": "Zaply",
+  "short_name": ElevenData,
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F4F6F8",

@@ -175,7 +175,7 @@ async function applyTheme() {
       if (!meta) { meta = document.createElement("meta"); meta.name = "theme-color"; document.head.appendChild(meta); }
       meta.content = tv.statusBar;
     }
-    document.title = json.data?.site_name ? `${json.data.site_name} — Zaply` : "Zaply";
+    document.title = json.data?.site_name ? `${json.data.site_name} — Zaply` : ElevenData;
   } catch { /* optional — stay quiet */ }
 }
 

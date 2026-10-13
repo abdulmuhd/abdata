@@ -25,13 +25,13 @@ def find_recipient(phone: str, db: Session = Depends(get_db), _: User = Depends(
         "success": True,
         "message": "OK",
         "data": {
-            "name": recipient.full_name or "Zaply User",
+            "name": recipient.full_name or "ElevenData User",
             "phone": recipient.phone,
         },
     }
 
 
-@router.post("/send", summary="Transfer balance to another Zaply user")
+@router.post("/send", summary="Transfer balance to another ElevenData user")
 def send_money(payload: TransferIn, db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     result = transfer_service.send_money(db, user, payload)
     return {

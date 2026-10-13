@@ -14,7 +14,7 @@ from . import notification_service, wallet_service
 def lookup_recipient(db: Session, phone: str) -> User:
     user = db.query(User).filter(User.phone == phone).first()
     if not user:
-        raise NotFoundError("No Zaply user found with that phone number.")
+        raise NotFoundError("No ElevenData user found with that phone number.")
     return user
 
 
@@ -58,7 +58,7 @@ def send_money(db: Session, sender: User, payload: TransferIn) -> dict:
         db,
         sender.id,
         "Transfer successful",
-        f"You sent {amount_naira_str} to {recipient.full_name or 'a Zaply user'} ({recipient.phone}).",
+        f"You sent {amount_naira_str} to {recipient.full_name or 'a ElevenData user'} ({recipient.phone}).",
         type_="wallet",
         reference=f"{ref}-S",
     )
@@ -68,7 +68,7 @@ def send_money(db: Session, sender: User, payload: TransferIn) -> dict:
         db,
         recipient.id,
         "Money received",
-        f"You received {amount_naira_str} from {sender.full_name or 'a Zaply user'} ({sender.phone}).",
+        f"You received {amount_naira_str} from {sender.full_name or 'a ElevenData user'} ({sender.phone}).",
         type_="wallet",
         reference=f"{ref}-R",
     )
@@ -77,7 +77,7 @@ def send_money(db: Session, sender: User, payload: TransferIn) -> dict:
 
     return {
         "reference": ref,
-        "recipient_name": recipient.full_name or "Zaply User",
+        "recipient_name": recipient.full_name or "ElevenData User",
         "recipient_phone": recipient.phone,
         "amount_kobo": amount_kobo,
         "status": "successful",
