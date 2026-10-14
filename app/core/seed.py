@@ -291,7 +291,7 @@ def settings_seed_history(db: Session, user: User) -> bool:
             )
             row.created_at = ts
             _notify(db, user.id, "wallet", "Wallet funded",
-                    f"₦{amount:,} was added to your Zaply wallet.", reference, ts)
+                    f"₦{amount:,} was added to your ElevenData wallet.", reference, ts)
             continue
 
         base_kind = kind.replace("_failed", "")
