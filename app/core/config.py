@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     ANNOUNCEMENT_ENABLED: bool = True
     ANNOUNCEMENT_TITLE: str = "Zero fees, every single day"
     ANNOUNCEMENT_BODY: str = (
-        "All airtime and data top-ups on Zaply are completely fee-free. Fund your wallet "
+        "All airtime and data top-ups on ElevenData are completely fee-free. Fund your wallet "
         "once and pay bills, subscribe to cable TV and more — all at no extra charge."
     )
     ANNOUNCEMENT_CTA_LABEL: str | None = "Fund your wallet"
